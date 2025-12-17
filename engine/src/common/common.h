@@ -4,10 +4,7 @@
 // 包含所有 lesson 共用的辅助函数
 // ============================================================================
 
-#ifndef OPENGL_LEARNING_COMMON_H
-#define OPENGL_LEARNING_COMMON_H
-
-#include <GLFW/glfw3.h>
+#pragma once
 
 // ============================================================================
 // 窗口大小改变回调函数
@@ -26,6 +23,4 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 // 参数：
 //   - window: 窗口指针
 void processInput(GLFWwindow* window);
-
-#endif // OPENGL_LEARNING_COMMON_H
 
