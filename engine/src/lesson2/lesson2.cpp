@@ -4,10 +4,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-
-// 回调函数声明
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
+#include "../common/common.h"  // 公共工具函数（回调函数和输入处理）
 
 // 窗口设置
 const unsigned int SCR_WIDTH = 800;
@@ -182,22 +179,5 @@ int lesson2_main()
 
     glfwTerminate();
     return 0;
-}
-
-// ============================================================================
-// 输入处理函数
-// ============================================================================
-void processInput(GLFWwindow *window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
-
-// ============================================================================
-// 窗口大小改变回调函数
-// ============================================================================
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
 }
 

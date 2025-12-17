@@ -4,6 +4,7 @@
 #include <iostream>        // 标准输入输出库，用于 cout、endl 等
 #include <glad/glad.h>     // GLAD：OpenGL 函数加载器，必须在 GLFW 之前包含
 #include <GLFW/glfw3.h>    // GLFW：窗口和输入管理库
+#include "../common/common.h"  // 公共工具函数（回调函数和输入处理）
 
 using namespace std;
 
@@ -13,39 +14,6 @@ using namespace std;
 // 定义窗口的宽度和高度（单位：像素）
 const unsigned int SCR_WIDTH = 800;   // 窗口宽度：800 像素
 const unsigned int SCR_HEIGHT = 600;  // 窗口高度：600 像素
-
-// ============================================================================
-// 回调函数：窗口大小改变时自动调用
-// ============================================================================
-// 当用户调整窗口大小时，GLFW 会自动调用这个函数
-// 参数：
-//   - window: 窗口指针
-//   - width:  新的窗口宽度
-//   - height: 新的窗口高度
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    // glViewport: 设置 OpenGL 渲染区域的大小和位置
-    // 参数：(x, y, width, height)
-    //   - (0, 0): 从窗口左下角开始
-    //   - width, height: 渲染区域的大小（通常等于窗口大小）
-    glViewport(0, 0, width, height);
-}
-
-// ============================================================================
-// 输入处理函数：检查用户输入
-// ============================================================================
-// 每帧都会调用这个函数来检查用户的键盘输入
-// 参数：
-//   - window: 窗口指针
-void processInput(GLFWwindow* window) {
-    // glfwGetKey: 检查指定按键是否被按下
-    // GLFW_KEY_ESCAPE: ESC 键
-    // GLFW_PRESS: 按键被按下的状态
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        // 设置窗口应该关闭的标志
-        // 这会让主循环中的 glfwWindowShouldClose 返回 true
-        glfwSetWindowShouldClose(window, true);
-    }
-}
 
 // ============================================================================
 // Lesson 1: 创建窗口和基本渲染循环

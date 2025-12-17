@@ -15,8 +15,14 @@ find_package(OpenGL REQUIRED)
 # 添加可执行文件
 add_executable(OpenGLLearning
         engine/src/main.cpp              # 主入口（选择 lesson）
+        engine/src/common/common.cpp      # 公共工具函数
         engine/src/lesson1/lesson1.cpp   # Lesson 1: 创建窗口和基本渲染循环
         engine/src/lesson2/lesson2.cpp   # Lesson 2: 绘制第一个三角形
+)
+
+# 设置包含目录（让编译器能找到 common.h）
+target_include_directories(OpenGLLearning PRIVATE
+        ${CMAKE_SOURCE_DIR}/engine/src
 )
 
 # 链接库（跨平台兼容）
