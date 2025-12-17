@@ -14,7 +14,9 @@ find_package(OpenGL REQUIRED)
 
 # 添加可执行文件
 add_executable(OpenGLLearning
-        engine/src/main.cpp
+        engine/src/main.cpp              # 主入口（选择 lesson）
+        engine/src/lesson1/lesson1.cpp   # Lesson 1: 创建窗口和基本渲染循环
+        engine/src/lesson2/lesson2.cpp   # Lesson 2: 绘制第一个三角形
 )
 
 # 链接库（跨平台兼容）
