@@ -12,7 +12,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include "../common/common.h"  // 公共工具函数（回调函数和输入处理）
+#include "common/common.h"  // 公共工具函数（回调函数和输入处理）
 
 // ============================================================================
 // 全局常量定义

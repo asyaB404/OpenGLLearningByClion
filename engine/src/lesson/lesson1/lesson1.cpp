@@ -4,7 +4,7 @@
 #include <iostream>        // 标准输入输出库，用于 cout、endl 等
 #include <glad/glad.h>     // GLAD：OpenGL 函数加载器，必须在 GLFW 之前包含
 #include <GLFW/glfw3.h>    // GLFW：窗口和输入管理库
-#include "../common/common.h"  // 公共工具函数（回调函数和输入处理）
+#include "common/common.h"  // 公共工具函数（回调函数和输入处理）
 
 using namespace std;
 
