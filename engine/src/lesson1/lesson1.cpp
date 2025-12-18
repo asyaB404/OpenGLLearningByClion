@@ -12,8 +12,9 @@ using namespace std;
 // 全局常量定义
 // ============================================================================
 // 定义窗口的宽度和高度（单位：像素）
-const unsigned int SCR_WIDTH = 800;   // 窗口宽度：800 像素
-const unsigned int SCR_HEIGHT = 600;  // 窗口高度：600 像素
+// static: 使变量只在当前文件内可见，避免与其他文件的同名变量冲突
+static const unsigned int SCR_WIDTH = 800;   // 窗口宽度：800 像素
+static const unsigned int SCR_HEIGHT = 600;  // 窗口高度：600 像素
 
 // ============================================================================
 // Lesson 1: 创建窗口和基本渲染循环

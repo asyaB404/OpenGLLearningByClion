@@ -18,8 +18,9 @@
 // 全局常量定义
 // ============================================================================
 // 定义窗口的宽度和高度（单位：像素）
-const unsigned int SCR_WIDTH = 800;   // 窗口宽度：800 像素
-const unsigned int SCR_HEIGHT = 600;  // 窗口高度：600 像素
+// static: 使变量只在当前文件内可见，避免与其他文件的同名变量冲突
+static const unsigned int SCR_WIDTH = 800;   // 窗口宽度：800 像素
+static const unsigned int SCR_HEIGHT = 600;  // 窗口高度：600 像素
 
 // ============================================================================
 // 顶点着色器源码（使用 GLSL 语言编写）
@@ -31,7 +32,8 @@ const unsigned int SCR_HEIGHT = 600;  // 窗口高度：600 像素
 //
 // GLSL（OpenGL Shading Language）是 OpenGL 的着色器编程语言
 // ============================================================================
-const char *vertexShaderSource = "#version 330 core\n"  // 指定 GLSL 版本为 3.3
+// static: 使变量只在当前文件内可见，避免与其他文件的同名变量冲突
+static const char *vertexShaderSource = "#version 330 core\n"  // 指定 GLSL 版本为 3.3
     "layout (location = 0) in vec3 aPos;\n"             // 输入：顶点位置（3D 向量）
     "void main()\n"                                       // 主函数
     "{\n"
@@ -52,7 +54,8 @@ const char *vertexShaderSource = "#version 330 core\n"  // 指定 GLSL 版本为
 // - 决定每个像素（片段）的最终颜色
 // - 在顶点着色器处理完顶点后运行
 // ============================================================================
-const char *fragmentShaderSource = "#version 330 core\n"  // 指定 GLSL 版本为 3.3
+// static: 使变量只在当前文件内可见，避免与其他文件的同名变量冲突
+static const char *fragmentShaderSource = "#version 330 core\n"  // 指定 GLSL 版本为 3.3
     "out vec4 FragColor;\n"                                // 输出：片段颜色（4D 向量，RGBA）
     "void main()\n"                                        // 主函数
     "{\n"

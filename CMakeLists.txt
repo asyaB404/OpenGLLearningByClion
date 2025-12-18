@@ -18,6 +18,7 @@ add_executable(OpenGLLearning
         engine/src/common/common.cpp      # 公共工具函数
         engine/src/lesson1/lesson1.cpp   # Lesson 1: 创建窗口和基本渲染循环
         engine/src/lesson2/lesson2.cpp   # Lesson 2: 绘制第一个三角形
+        engine/src/lesson3/lesson3_1.cpp # Lesson 3.1: 顶点颜色（彩色三角形）
 )
 
 # 设置包含目录（让编译器能找到 common.h）
