@@ -29,6 +29,10 @@ target_include_directories(OpenGLLearning PRIVATE
         ${CMAKE_SOURCE_DIR}/engine/3rdparty  # stb_image.h
 )
 
+# 定义资源路径宏（用于在代码中访问资源文件）
+# 这样可以在代码中使用 PROJECT_ROOT 宏来构建资源路径
+add_definitions(-DPROJECT_ROOT="${CMAKE_SOURCE_DIR}")
+
 # 链接库（跨平台兼容）
 target_link_libraries(OpenGLLearning
         glad          # GLAD 库（会自动传递头文件路径）

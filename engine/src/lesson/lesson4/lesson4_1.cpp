@@ -1,5 +1,5 @@
 // ============================================================================
-// Lesson 4: 纹理（Texture）
+// Lesson 4.1: 纹理（Texture）
 // ============================================================================
 // 本课程学习内容：
 // 1. 什么是纹理以及如何使用
@@ -7,59 +7,23 @@
 // 3. 如何将纹理应用到几何体上
 // 4. 多个纹理的使用（纹理单元）
 // 5. 纹理参数设置（过滤、环绕模式）
+// 6. 使用 Shader 类管理着色器
+// 7. 使用 stb_image 加载图片文件
 // ============================================================================
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stb_image.h>
 #include <iostream>
+#include <string>  // 用于 std::string
 #include "common/common.h"  // 公共工具函数（回调函数和输入处理）
+#include "common/shader.h" // Shader 类
 
 // ============================================================================
 // 全局常量定义
 // ============================================================================
 static const unsigned int SCR_WIDTH = 800;
 static const unsigned int SCR_HEIGHT = 600;
-
-// ============================================================================
-// 顶点着色器源码（GLSL 语言）
-// ============================================================================
-// 这个着色器接收三个属性：
-// 1. aPos (位置) - location = 0
-// 2. aColor (颜色) - location = 1
-// 3. aTexCoord (纹理坐标) - location = 2
-// 
-// 顶点着色器将纹理坐标传递给片段着色器
-// ============================================================================
-static const char *vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"        // 输入：顶点位置
-    "layout (location = 1) in vec3 aColor;\n"      // 输入：顶点颜色
-    "layout (location = 2) in vec2 aTexCoord;\n"   // 输入：纹理坐标
-    "out vec3 ourColor;\n"                          // 输出：传递给片段着色器的颜色
-    "out vec2 TexCoord;\n"                          // 输出：传递给片段着色器的纹理坐标
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"          // 设置顶点位置
-    "   ourColor = aColor;\n"                       // 将颜色传递给片段着色器
-    "   TexCoord = aTexCoord;\n"                    // 将纹理坐标传递给片段着色器
-    "}\0";
-
-// ============================================================================
-// 片段着色器源码（GLSL 语言）
-// ============================================================================
-// 这个着色器接收两个纹理（texture1 和 texture2）
-// 并将它们混合在一起
-// ============================================================================
-static const char *fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\n"                         // 输出：最终片段颜色
-    "in vec3 ourColor;\n"                           // 输入：从顶点着色器传来的颜色
-    "in vec2 TexCoord;\n"                           // 输入：从顶点着色器传来的纹理坐标
-    "uniform sampler2D texture1;\n"                  // 纹理采样器 1
-    "uniform sampler2D texture2;\n"                  // 纹理采样器 2
-    "void main()\n"
-    "{\n"
-    "   // 混合两个纹理：texture1 占 80%，texture2 占 20%\n"
-    "   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2);\n"
-    "}\n\0";
 
 // ============================================================================
 // 辅助函数：创建程序生成的纹理（用于演示，不需要加载图片）
@@ -91,60 +55,66 @@ unsigned int createProceduralTexture()
 }
 
 // ============================================================================
-// 辅助函数：编译着色器
+// 辅助函数：加载纹理（使用 stb_image）
 // ============================================================================
-unsigned int compileShader(unsigned int type, const char* source)
+// 参数：
+//   - path: 图片文件路径
+//   - flipVertically: 是否垂直翻转图片（OpenGL 的纹理坐标原点在左下角）
+// 返回：纹理 ID
+// ============================================================================
+unsigned int loadTexture(const char* path, bool flipVertically = true)
 {
-    unsigned int shader = glCreateShader(type);
-    glShaderSource(shader, 1, &source, NULL);
-    glCompileShader(shader);
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
     
-    // 检查编译错误
-    int success;
-    char infoLog[512];
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success)
+    int width, height, nrChannels;
+    
+    // 设置是否垂直翻转图片
+    // OpenGL 的纹理坐标原点在左下角，而大多数图片格式的原点在左上角
+    stbi_set_flip_vertically_on_load(flipVertically);
+    
+    // 加载图片
+    unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
+    
+    if (data)
     {
-        glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+        // 根据通道数确定格式
+        GLenum format;
+        if (nrChannels == 1)
+            format = GL_RED;
+        else if (nrChannels == 3)
+            format = GL_RGB;
+        else if (nrChannels == 4)
+            format = GL_RGBA;
+        
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        
+        // 设置纹理参数
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        
+        // 释放图片数据
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cout << "Failed to load texture: " << path << std::endl;
+        // 加载失败时，删除已创建的纹理对象并返回 0
+        glDeleteTextures(1, &textureID);
+        return 0;
     }
     
-    return shader;
+    return textureID;
 }
 
 // ============================================================================
-// 辅助函数：创建着色器程序
+// Lesson 4.1 主函数
 // ============================================================================
-unsigned int createShaderProgram(const char* vertexSource, const char* fragmentSource)
-{
-    unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vertexSource);
-    unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
-    
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    
-    // 检查链接错误
-    int success;
-    char infoLog[512];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    }
-    
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-    
-    return shaderProgram;
-}
-
-// ============================================================================
-// Lesson 4 主函数
-// ============================================================================
-int lesson4_main()
+int lesson4_1_main()
 {
     // ========================================================================
     // 第一步：初始化 GLFW
@@ -181,9 +151,14 @@ int lesson4_main()
     }
 
     // ========================================================================
-    // 第四步：创建和编译着色器程序
+    // 第四步：创建和编译着色器程序（使用 Shader 类）
     // ========================================================================
-    unsigned int shaderProgram = createShaderProgram(vertexShaderSource, fragmentShaderSource);
+    // Shader 类会自动从文件加载、编译和链接着色器
+    // 使用 PROJECT_ROOT 宏（由 CMake 定义）来构建完整路径
+    // ========================================================================
+    std::string vertexPath = std::string(PROJECT_ROOT) + "/engine/src/lesson/lesson4/4.1.texture.vs";
+    std::string fragmentPath = std::string(PROJECT_ROOT) + "/engine/src/lesson/lesson4/4.1.texture.fs";
+    Shader ourShader(vertexPath.c_str(), fragmentPath.c_str());
 
     // ========================================================================
     // 第五步：设置顶点数据
@@ -230,17 +205,27 @@ int lesson4_main()
     glEnableVertexAttribArray(2);
 
     // ========================================================================
-    // 第六步：创建纹理
+    // 第六步：加载纹理
     // ========================================================================
-    // 创建两个程序生成的纹理（用于演示）
-    // 在实际应用中，你可以使用 stb_image 加载图片文件
+    // 使用 stb_image 加载真实图片文件
+    // 纹理文件路径：engine/assets/texture/lesson/wall.jpg
+    // 注意：路径相对于程序运行时的当前工作目录（通常是 cmake-build-debug）
     // ========================================================================
     unsigned int texture1, texture2;
     
-    // 纹理 1
-    texture1 = createProceduralTexture();
+    // 纹理 1：加载 wall.jpg 图片
+    // 使用 PROJECT_ROOT 宏（由 CMake 定义）来构建完整路径
+    // 如果文件不存在，loadTexture 会返回 0，我们可以使用程序生成的纹理作为备选
+    std::string texturePath = std::string(PROJECT_ROOT) + "/engine/assets/texture/lesson/wall.jpg";
+    texture1 = loadTexture(texturePath.c_str());
+    if (texture1 == 0) {
+        std::cout << "警告：无法加载 wall.jpg，使用程序生成的纹理" << std::endl;
+        texture1 = createProceduralTexture();
+    }
     
-    // 纹理 2（创建另一个纹理，使用不同的颜色）
+    // 纹理 2：创建程序生成的纹理（用于混合效果）
+    // 如果你想使用另一个图片，可以取消下面的注释：
+    // texture2 = loadTexture("engine/assets/texture/lesson/another_texture.jpg");
     glGenTextures(1, &texture2);
     glBindTexture(GL_TEXTURE_2D, texture2);
     unsigned char data2[] = {
@@ -253,18 +238,19 @@ int lesson4_main()
     glGenerateMipmap(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     // ========================================================================
     // 第七步：告诉 OpenGL 每个采样器对应哪个纹理单元
     // ========================================================================
     // 纹理单元（Texture Unit）是 OpenGL 中用于管理多个纹理的机制
     // GL_TEXTURE0 是默认激活的纹理单元
+    // 使用 Shader 类的 setInt 方法设置 uniform 变量
     // ========================================================================
-    glUseProgram(shaderProgram);
-    glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);  // 纹理单元 0
-    glUniform1i(glGetUniformLocation(shaderProgram, "texture2"), 1);  // 纹理单元 1
+    ourShader.use();  // 激活着色器程序
+    ourShader.setInt("texture1", 0);  // 纹理单元 0 对应 texture1
+    ourShader.setInt("texture2", 1);  // 纹理单元 1 对应 texture2
 
     // ========================================================================
     // 第八步：渲染循环
@@ -285,7 +271,7 @@ int lesson4_main()
         glBindTexture(GL_TEXTURE_2D, texture2);
 
         // 渲染容器
-        glUseProgram(shaderProgram);
+        ourShader.use();  // 使用 Shader 类的 use 方法
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -302,7 +288,8 @@ int lesson4_main()
     glDeleteBuffers(1, &EBO);
     glDeleteTextures(1, &texture1);
     glDeleteTextures(1, &texture2);
-    glDeleteProgram(shaderProgram);
+    // Shader 类的析构函数会自动删除着色器程序，但我们可以显式调用
+    // 实际上，Shader 类没有提供删除方法，程序结束时会自动清理
 
     glfwTerminate();
     return 0;
