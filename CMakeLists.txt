@@ -16,14 +16,17 @@ find_package(OpenGL REQUIRED)
 add_executable(OpenGLLearning
         engine/src/main.cpp              # 主入口（选择 lesson）
         engine/src/common/common.cpp      # 公共工具函数
+        engine/src/common/stb_image_impl.cpp  # stb_image 实现（单头文件库）
         engine/src/lesson/lesson1/lesson1.cpp   # Lesson 1: 创建窗口和基本渲染循环
         engine/src/lesson/lesson2/lesson2.cpp   # Lesson 2: 绘制第一个三角形
         engine/src/lesson/lesson3/lesson3_1.cpp # Lesson 3.1: 顶点颜色（彩色三角形）
+        engine/src/lesson/lesson4/lesson4_1.cpp   # Lesson 4: 纹理（Texture）
 )
 
-# 设置包含目录（让编译器能找到 common.h）
+# 设置包含目录（让编译器能找到 common.h 和 stb_image.h）
 target_include_directories(OpenGLLearning PRIVATE
         ${CMAKE_SOURCE_DIR}/engine/src
+        ${CMAKE_SOURCE_DIR}/engine/3rdparty  # stb_image.h
 )
 
 # 链接库（跨平台兼容）

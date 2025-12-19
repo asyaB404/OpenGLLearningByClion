@@ -10,6 +10,7 @@
 extern int lesson1_main();
 extern int lesson2_main();
 extern int lesson3_1_main();
+extern int lesson4_main();
 
 // ============================================================================
 // 显示菜单
@@ -22,9 +23,10 @@ void showMenu() {
     std::cout << "1. Lesson 1 - 创建窗口和基本渲染循环\n";
     std::cout << "2. Lesson 2 - 绘制第一个三角形\n";
     std::cout << "3. Lesson 3.1 - 顶点颜色（彩色三角形）\n";
+    std::cout << "4. Lesson 4 - 纹理（Texture）\n";
     std::cout << "0. 退出\n";
     std::cout << "========================================\n";
-    std::cout << "请选择 (0-3): ";
+    std::cout << "请选择 (0-4): ";
 }
 
 // ============================================================================
@@ -54,6 +56,11 @@ int main() {
             case 3:
                 std::cout << "\n>>> 运行 Lesson 3.1...\n" << std::endl;
                 lesson3_1_main();
+                break;
+                
+            case 4:
+                std::cout << "\n>>> 运行 Lesson 4...\n" << std::endl;
+                lesson4_main();
                 break;
                 
             case 0:
