@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+#include "lesson/test/test.h"
+
 // 声明各个 lesson 的主函数
 extern int lesson1_main();
 extern int lesson2_main();
@@ -24,7 +26,7 @@ void showMenu() {
     std::cout << "2. Lesson 2 - 绘制第一个三角形\n";
     std::cout << "3. Lesson 3.1 - 顶点颜色（彩色三角形）\n";
     std::cout << "4. Lesson 4 - 纹理（Texture）\n";
-    std::cout << "0. 退出\n";
+    std::cout << "0. 测试\n";
     std::cout << "========================================\n";
     std::cout << "请选择 (0-4): ";
 }
@@ -64,7 +66,7 @@ int main() {
                 break;
                 
             case 0:
-                std::cout << "\n退出程序。\n" << std::endl;
+                test::testFunc();
                 break;
                 
             default:
