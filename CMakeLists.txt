@@ -9,6 +9,9 @@ add_subdirectory(engine/3rdparty/glfw-3.4)
 # 添加 GLAD 子目录（OpenGL 函数加载器）
 add_subdirectory(engine/3rdparty/glad)
 
+# 添加 GLM 子目录（OpenGL 数学库）
+add_subdirectory(engine/3rdparty/glm)
+
 # 查找 OpenGL（跨平台：Windows/macOS/Linux 都支持）
 find_package(OpenGL REQUIRED)
 
@@ -38,6 +41,7 @@ target_link_libraries(OpenGLLearning
         glad          # GLAD 库（会自动传递头文件路径）
         glfw          # GLFW 会自动处理平台特定的依赖
         OpenGL::GL    # CMake 的 OpenGL 包在 Windows/macOS/Linux 都可用
+        glm::glm      # GLM 数学库（header-only，会自动传递头文件路径）
 )
 
 # macOS 特定框架（仅 macOS 需要）
