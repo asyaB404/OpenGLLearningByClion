@@ -3,4 +3,5 @@
 
 void test::testFunc() {
     std::cout << "testFunc" << std::endl;
+    std::cout << "testFunc" << std::endl;
 }
