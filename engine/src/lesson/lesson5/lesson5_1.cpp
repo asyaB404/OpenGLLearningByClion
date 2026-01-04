@@ -323,8 +323,10 @@ int lesson5_1_main()
             model = glm::translate(model, cubePositions[i]);
             
             // 然后旋转立方体
-            // 每个立方体旋转不同的角度，使用不同的旋转轴
-            float angle = 20.0f * i;
+            // 使用 glfwGetTime() 获取当前时间，让立方体随时间旋转
+            // 每个立方体有不同的旋转速度和初始角度
+            float time = (float)glfwGetTime();
+            float angle = 20.0f * i + time * 50.0f; // 基础角度 + 随时间旋转（每秒50度）
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             
             // 将模型矩阵传递给着色器
