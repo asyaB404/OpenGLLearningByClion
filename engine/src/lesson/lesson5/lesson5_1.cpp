@@ -28,14 +28,45 @@ static const unsigned int SCR_WIDTH = 800;
 static const unsigned int SCR_HEIGHT = 600;
 
 // ============================================================================
+// 辅助函数：创建程序生成的纹理（用于演示，不需要加载图片）
+// ============================================================================
+// 使用 static 关键字，使函数只在当前文件内可见，避免链接错误
+static unsigned int createProceduralTexture()
+{
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    
+    // 创建一个简单的 2x2 纹理（棋盘格图案）
+    unsigned char data[] = {
+        255, 0, 0,     // 红色
+        0, 255, 0,     // 绿色
+        0, 0, 255,     // 蓝色
+        255, 255, 0   // 黄色
+    };
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    
+    // 设置纹理参数
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    
+    return texture;
+}
+
+// ============================================================================
 // 辅助函数：加载纹理（使用 stb_image）
 // ============================================================================
 // 参数：
 //   - path: 图片文件路径
 //   - flipVertically: 是否垂直翻转图片（OpenGL 的纹理坐标原点在左下角）
 // 返回：纹理 ID
+// 使用 static 关键字，使函数只在当前文件内可见，避免链接错误
 // ============================================================================
-unsigned int loadTexture(const char* path, bool flipVertically = true)
+static unsigned int loadTexture(const char* path, bool flipVertically = true)
 {
     unsigned int textureID;
     glGenTextures(1, &textureID);
@@ -82,35 +113,6 @@ unsigned int loadTexture(const char* path, bool flipVertically = true)
     }
     
     return textureID;
-}
-
-// ============================================================================
-// 辅助函数：创建程序生成的纹理（用于演示，不需要加载图片）
-// ============================================================================
-unsigned int createProceduralTexture()
-{
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    
-    // 创建一个简单的 2x2 纹理（棋盘格图案）
-    unsigned char data[] = {
-        255, 0, 0,     // 红色
-        0, 255, 0,     // 绿色
-        0, 0, 255,     // 蓝色
-        255, 255, 0   // 黄色
-    };
-    
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    
-    // 设置纹理参数
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    
-    return texture;
 }
 
 // ============================================================================

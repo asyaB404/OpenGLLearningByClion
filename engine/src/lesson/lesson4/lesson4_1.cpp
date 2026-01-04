@@ -28,7 +28,8 @@ static const unsigned int SCR_HEIGHT = 600;
 // ============================================================================
 // 辅助函数：创建程序生成的纹理（用于演示，不需要加载图片）
 // ============================================================================
-unsigned int createProceduralTexture()
+// 使用 static 关键字，使函数只在当前文件内可见，避免链接错误
+static unsigned int createProceduralTexture()
 {
     unsigned int texture;
     glGenTextures(1, &texture);
@@ -61,8 +62,9 @@ unsigned int createProceduralTexture()
 //   - path: 图片文件路径
 //   - flipVertically: 是否垂直翻转图片（OpenGL 的纹理坐标原点在左下角）
 // 返回：纹理 ID
+// 使用 static 关键字，使函数只在当前文件内可见，避免链接错误
 // ============================================================================
-unsigned int loadTexture(const char* path, bool flipVertically = true)
+static unsigned int loadTexture(const char* path, bool flipVertically = true)
 {
     unsigned int textureID;
     glGenTextures(1, &textureID);
