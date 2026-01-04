@@ -14,6 +14,7 @@ extern int lesson2_main();
 extern int lesson3_1_main();
 extern int lesson4_1_main();
 extern int lesson5_1_main();
+extern int lesson6_1_main();
 
 // ============================================================================
 // 显示菜单
@@ -28,9 +29,10 @@ void showMenu() {
     std::cout << "3. Lesson 3.1 - 顶点颜色（彩色三角形）\n";
     std::cout << "4. Lesson 4 - 纹理（Texture）\n";
     std::cout << "5. Lesson 5 - 坐标系统（Coordinate Systems）\n";
+    std::cout << "6. Lesson 6 - 相机系统（Camera System）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
-    std::cout << "请选择 (0-5): ";
+    std::cout << "请选择 (0-6): ";
 }
 
 // ============================================================================
@@ -70,6 +72,11 @@ int main() {
             case 5:
                 std::cout << "\n>>> 运行 Lesson 5.1...\n" << std::endl;
                 lesson5_1_main();
+                break;
+                
+            case 6:
+                std::cout << "\n>>> 运行 Lesson 6.1...\n" << std::endl;
+                lesson6_1_main();
                 break;
                 
             case 0:
