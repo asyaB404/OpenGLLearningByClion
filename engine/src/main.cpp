@@ -5,6 +5,9 @@
 // ============================================================================
 
 #include <iostream>
+#include <cstdio>
+#include <termios.h>
+#include <unistd.h>
 
 #include "lesson/test/test.h"
 
@@ -32,7 +35,31 @@ void showMenu() {
     std::cout << "6. Lesson 6 - 相机系统（Camera System）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
-    std::cout << "请选择 (0-6): ";
+    std::cout << "请选择 (0-6, 按 ESC 或 q 退出): ";
+}
+
+// ============================================================================
+// 获取单个字符输入（支持 ESC 键检测）
+// ============================================================================
+int getCharInput() {
+    struct termios oldt, newt;
+    int ch;
+    
+    // 保存当前终端设置
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    
+    // 设置为原始模式（不缓冲，不回显）
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    
+    // 读取一个字符
+    ch = getchar();
+    
+    // 恢复终端设置
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    
+    return ch;
 }
 
 // ============================================================================
@@ -41,12 +68,28 @@ void showMenu() {
 int main() {
     int choice = -1;
     
-    while (choice != 0) {
+    while (true) {
         showMenu();
-        std::cin >> choice;
+        
+        // 使用字符输入以支持 ESC 键检测
+        int ch = getCharInput();
+        
+        // 检测 ESC 键（ASCII 码 27）或 'q'/'Q' 键
+        if (ch == 27 || ch == 'q' || ch == 'Q') {
+            std::cout << "\n退出程序。\n" << std::endl;
+            break;
+        }
+        
+        // 将字符转换为数字
+        if (ch >= '0' && ch <= '6') {
+            choice = ch - '0';
+        } else {
+            std::cout << "\n无效的选择，请重新输入。\n" << std::endl;
+            continue;
+        }
         
         // 清除输入缓冲区
-        std::cin.ignore();
+        std::cin.ignore(10000, '\n');
         
         switch (choice) {
             case 1:
