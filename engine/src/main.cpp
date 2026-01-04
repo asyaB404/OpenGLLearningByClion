@@ -5,6 +5,7 @@
 // ============================================================================
 
 #include <iostream>
+#include <string>
 #include <cstdio>
 #include <termios.h>
 #include <unistd.h>
@@ -18,6 +19,7 @@ extern int lesson3_1_main();
 extern int lesson4_1_main();
 extern int lesson5_1_main();
 extern int lesson6_1_main();
+extern int lesson6_1_oop_main();
 
 // ============================================================================
 // 显示菜单
@@ -33,33 +35,19 @@ void showMenu() {
     std::cout << "4. Lesson 4 - 纹理（Texture）\n";
     std::cout << "5. Lesson 5 - 坐标系统（Coordinate Systems）\n";
     std::cout << "6. Lesson 6 - 相机系统（Camera System）\n";
+    std::cout << "6-1. Lesson 6 OOP - 相机系统（面向对象版本）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
-    std::cout << "请选择 (0-6, 按 ESC 或 q 退出): ";
+    std::cout << "输入 q 退出";
 }
 
 // ============================================================================
-// 获取单个字符输入（支持 ESC 键检测）
+// 获取用户输入（支持 ESC 键检测和字符串输入）
 // ============================================================================
-int getCharInput() {
-    struct termios oldt, newt;
-    int ch;
-    
-    // 保存当前终端设置
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    
-    // 设置为原始模式（不缓冲，不回显）
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    
-    // 读取一个字符
-    ch = getchar();
-    
-    // 恢复终端设置
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    
-    return ch;
+std::string getUserInput() {
+    std::string input;
+    std::getline(std::cin, input);
+    return input;
 }
 
 // ============================================================================
@@ -71,25 +59,37 @@ int main() {
     while (true) {
         showMenu();
         
-        // 使用字符输入以支持 ESC 键检测
-        int ch = getCharInput();
+        // 获取用户输入
+        std::string input = getUserInput();
         
-        // 检测 ESC 键（ASCII 码 27）或 'q'/'Q' 键
-        if (ch == 27 || ch == 'q' || ch == 'Q') {
+        // 去除首尾空格
+        while (!input.empty() && (input.front() == ' ' || input.front() == '\t')) {
+            input.erase(0, 1);
+        }
+        while (!input.empty() && (input.back() == ' ' || input.back() == '\t')) {
+            input.pop_back();
+        }
+        
+        // 检测退出命令
+        if (input == "q" || input == "Q" || input == "quit" || input == "exit") {
             std::cout << "\n退出程序。\n" << std::endl;
             break;
         }
         
-        // 将字符转换为数字
-        if (ch >= '0' && ch <= '6') {
-            choice = ch - '0';
-        } else {
-            std::cout << "\n无效的选择，请重新输入。\n" << std::endl;
+        // 检测 "6-1" 输入
+        if (input == "6-1") {
+            std::cout << "\n>>> 运行 Lesson 6.1 OOP...\n" << std::endl;
+            lesson6_1_oop_main();
             continue;
         }
         
-        // 清除输入缓冲区
-        std::cin.ignore(10000, '\n');
+        // 将字符串转换为数字
+        try {
+            choice = std::stoi(input);
+        } catch (...) {
+            std::cout << "\n无效的选择，请重新输入。\n" << std::endl;
+            continue;
+        }
         
         switch (choice) {
             case 1:
