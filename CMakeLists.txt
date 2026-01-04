@@ -24,6 +24,7 @@ add_executable(OpenGLLearning
         engine/src/lesson/lesson2/lesson2.cpp   # Lesson 2: 绘制第一个三角形
         engine/src/lesson/lesson3/lesson3_1.cpp # Lesson 3.1: 顶点颜色（彩色三角形）
         engine/src/lesson/lesson4/lesson4_1.cpp # Lesson 4: 纹理（Texture）
+        engine/src/lesson/lesson5/lesson5_1.cpp # Lesson 5: 坐标系统（Coordinate Systems）
         engine/src/lesson/test/test.cpp
 )
 
