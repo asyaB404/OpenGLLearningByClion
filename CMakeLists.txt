@@ -27,6 +27,7 @@ add_executable(OpenGLLearning
         engine/src/lesson/lesson5/lesson5_1.cpp # Lesson 5: 坐标系统（Coordinate Systems）
         engine/src/lesson/lesson6/lesson6_1.cpp # Lesson 6: 相机系统（Camera System）
         engine/src/lesson/lesson6/lesson6_oop.cpp # Lesson 6 OOP: 面向对象版本
+        engine/src/lesson/lesson7/lesson7_1.cpp # Lesson 7: 基础光照（Basic Lighting）
         engine/src/common/application.cpp       # Application 基类实现
         engine/src/common/camera_application.cpp # CameraApplication 实现
         engine/src/lesson/test/test.cpp
