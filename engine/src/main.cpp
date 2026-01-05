@@ -22,6 +22,7 @@ extern int lesson6_1_main();
 extern int lesson6_1_oop_main();
 extern int lesson7_1_main();
 extern int lesson8_1_main();
+extern int lesson8_2_main();
 
 // ============================================================================
 // 显示菜单
@@ -40,6 +41,7 @@ void showMenu() {
     std::cout << "6-1. Lesson 6 OOP - 相机系统（面向对象版本）\n";
     std::cout << "7. Lesson 7 - 基础光照（Basic Lighting）\n";
     std::cout << "8. Lesson 8 - 基础光照（Phong 模型）\n";
+    std::cout << "8-2. Lesson 8.2 - 基础光照（Phong 模型 + 动态光源）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
     std::cout << "输入 q 退出";
@@ -80,10 +82,15 @@ int main() {
             break;
         }
         
-        // 检测 "6-1" 输入
+        // 检测特殊输入
         if (input == "6-1") {
             std::cout << "\n>>> 运行 Lesson 6.1 OOP...\n" << std::endl;
             lesson6_1_oop_main();
+            continue;
+        }
+        if (input == "8-2") {
+            std::cout << "\n>>> 运行 Lesson 8.2...\n" << std::endl;
+            lesson8_2_main();
             continue;
         }
         
