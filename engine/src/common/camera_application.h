@@ -38,6 +38,7 @@ protected:
     virtual void OnMouseMove(double xpos, double ypos) override;
     virtual void OnMouseScroll(double xoffset, double yoffset) override;
     virtual void OnInitialize() override;
+    virtual void OnUpdate(float deltaTime) override;
 
     // ========================================================================
     // 成员变量

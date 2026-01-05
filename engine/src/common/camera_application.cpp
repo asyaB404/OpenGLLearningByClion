@@ -24,24 +24,31 @@ void CameraApplication::OnInitialize()
 }
 
 // ============================================================================
-// 键盘输入处理（相机移动）
+// 键盘输入处理（ESC 退出等）
 // ============================================================================
 void CameraApplication::OnKey(int key, int scancode, int action, int mods)
 {
-    // 先调用基类处理（ESC 退出等）
+    // 调用基类处理（ESC 退出等）
     Application::OnKey(key, scancode, action, mods);
+}
 
-    // 处理相机移动（WASD）
-    if (action == GLFW_PRESS || action == GLFW_REPEAT)
+// ============================================================================
+// 每帧更新（处理相机移动）
+// ============================================================================
+void CameraApplication::OnUpdate(float deltaTime)
+{
+    // 每帧检查按键状态（持续移动）
+    GLFWwindow* window = GetWindow();
+    if (window)
     {
-        if (key == GLFW_KEY_W)
-            m_camera.ProcessKeyboard(FORWARD, GetDeltaTime());
-        if (key == GLFW_KEY_S)
-            m_camera.ProcessKeyboard(BACKWARD, GetDeltaTime());
-        if (key == GLFW_KEY_A)
-            m_camera.ProcessKeyboard(LEFT, GetDeltaTime());
-        if (key == GLFW_KEY_D)
-            m_camera.ProcessKeyboard(RIGHT, GetDeltaTime());
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            m_camera.ProcessKeyboard(FORWARD, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            m_camera.ProcessKeyboard(BACKWARD, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            m_camera.ProcessKeyboard(LEFT, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            m_camera.ProcessKeyboard(RIGHT, deltaTime);
     }
 }
 
@@ -53,8 +60,6 @@ void CameraApplication::OnMouseMove(double xpos, double ypos)
     if (!m_mouseCaptured)
         return;
 
-    Application::OnMouseMove(xpos, ypos);
-
     // 计算鼠标偏移量
     float xposf = static_cast<float>(xpos);
     float yposf = static_cast<float>(ypos);
@@ -64,6 +69,7 @@ void CameraApplication::OnMouseMove(double xpos, double ypos)
         m_lastX = xposf;
         m_lastY = yposf;
         m_firstMouse = false;
+        return;  // 第一次移动时不处理，只记录位置
     }
 
     float xoffset = xposf - m_lastX;
