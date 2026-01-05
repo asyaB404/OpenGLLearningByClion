@@ -18,10 +18,12 @@
 // 相机移动方向枚举
 // ============================================================================
 enum Camera_Movement {
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT
+    FORWARD,   // 向前移动
+    BACKWARD,  // 向后移动
+    LEFT,      // 向左移动
+    RIGHT,     // 向右移动
+    UP,        // 向上移动
+    DOWN       // 向下移动
 };
 
 // ============================================================================
@@ -106,7 +108,7 @@ public:
     // 处理键盘输入
     // ========================================================================
     // 参数：
-    //   - direction: 移动方向（FORWARD, BACKWARD, LEFT, RIGHT）
+    //   - direction: 移动方向（FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN）
     //   - deltaTime: 帧时间差（用于平滑移动）
     // ========================================================================
     void ProcessKeyboard(Camera_Movement direction, float deltaTime)
@@ -120,6 +122,10 @@ public:
             Position -= Right * velocity;
         if (direction == RIGHT)
             Position += Right * velocity;
+        if (direction == UP)
+            Position += WorldUp * velocity;
+        if (direction == DOWN)
+            Position -= WorldUp * velocity;
     }
 
     // ========================================================================

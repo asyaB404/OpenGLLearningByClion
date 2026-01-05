@@ -41,6 +41,7 @@ void CameraApplication::OnUpdate(float deltaTime)
     GLFWwindow* window = GetWindow();
     if (window)
     {
+        // 水平移动（WASD）
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             m_camera.ProcessKeyboard(FORWARD, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -49,6 +50,13 @@ void CameraApplication::OnUpdate(float deltaTime)
             m_camera.ProcessKeyboard(LEFT, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             m_camera.ProcessKeyboard(RIGHT, deltaTime);
+        
+        // 垂直移动（空格向上，Shift向下）
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+            m_camera.ProcessKeyboard(UP, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || 
+            glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+            m_camera.ProcessKeyboard(DOWN, deltaTime);
     }
 }
 
