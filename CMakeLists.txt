@@ -30,6 +30,7 @@ add_executable(OpenGLLearning
         engine/src/lesson/lesson7/lesson7_1.cpp # Lesson 7: 基础光照（Basic Lighting）
         engine/src/lesson/lesson8/lesson8_1.cpp # Lesson 8: 基础光照（Phong 模型）
         engine/src/lesson/lesson8/lesson8_2.cpp # Lesson 8.2: 基础光照（Phong 模型 + 动态光源）
+        engine/src/lesson/lesson9/lesson9_1.cpp # Lesson 9: 材质系统（Materials）
         engine/src/common/application.cpp       # Application 基类实现
         engine/src/common/camera_application.cpp # CameraApplication 实现
         engine/src/lesson/test/test.cpp
