@@ -21,6 +21,7 @@ extern int lesson5_1_main();
 extern int lesson6_1_main();
 extern int lesson6_1_oop_main();
 extern int lesson7_1_main();
+extern int lesson8_1_main();
 
 // ============================================================================
 // 显示菜单
@@ -38,6 +39,7 @@ void showMenu() {
     std::cout << "6. Lesson 6 - 相机系统（Camera System）\n";
     std::cout << "6-1. Lesson 6 OOP - 相机系统（面向对象版本）\n";
     std::cout << "7. Lesson 7 - 基础光照（Basic Lighting）\n";
+    std::cout << "8. Lesson 8 - 基础光照（Phong 模型）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
     std::cout << "输入 q 退出";
@@ -127,6 +129,11 @@ int main() {
             case 7:
                 std::cout << "\n>>> 运行 Lesson 7.1...\n" << std::endl;
                 lesson7_1_main();
+                break;
+                
+            case 8:
+                std::cout << "\n>>> 运行 Lesson 8.1...\n" << std::endl;
+                lesson8_1_main();
                 break;
                 
             case 0:
