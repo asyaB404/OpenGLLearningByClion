@@ -34,6 +34,7 @@ add_executable(OpenGLLearning
         engine/src/lesson/lesson10/lesson10_1.cpp # Lesson 10: 光照贴图（Lighting Maps）
         engine/src/lesson/lesson11/lesson11_1.cpp # Lesson 11: 方向光（Directional Light）
         engine/src/lesson/lesson11/lesson11_2.cpp # Lesson 11.2: 点光源（Point Light）
+        engine/src/lesson/lesson11/lesson11_3.cpp # Lesson 11.3: 聚光灯（Spotlight）
         engine/src/common/application.cpp       # Application 基类实现
         engine/src/common/camera_application.cpp # CameraApplication 实现
         engine/src/lesson/test/test.cpp
