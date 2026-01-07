@@ -33,6 +33,7 @@ add_executable(OpenGLLearning
         engine/src/lesson/lesson9/lesson9_1.cpp # Lesson 9: 材质系统（Materials）
         engine/src/lesson/lesson10/lesson10_1.cpp # Lesson 10: 光照贴图（Lighting Maps）
         engine/src/lesson/lesson11/lesson11_1.cpp # Lesson 11: 方向光（Directional Light）
+        engine/src/lesson/lesson11/lesson11_2.cpp # Lesson 11.2: 点光源（Point Light）
         engine/src/common/application.cpp       # Application 基类实现
         engine/src/common/camera_application.cpp # CameraApplication 实现
         engine/src/lesson/test/test.cpp

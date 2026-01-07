@@ -26,6 +26,7 @@ extern int lesson8_2_main();
 extern int lesson9_1_main();
 extern int lesson10_1_main();
 extern int lesson11_1_main();
+extern int lesson11_2_main();
 
 // ============================================================================
 // 显示菜单
@@ -48,6 +49,7 @@ void showMenu() {
     std::cout << "9. Lesson 9 - 材质系统（Materials）\n";
     std::cout << "10. Lesson 10 - 光照贴图（Lighting Maps）\n";
     std::cout << "11. Lesson 11 - 方向光（Directional Light）\n";
+    std::cout << "11-2. Lesson 11.2 - 点光源（Point Light）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
     std::cout << "输入 q 退出";
@@ -97,6 +99,11 @@ int main() {
         if (input == "8-2") {
             std::cout << "\n>>> 运行 Lesson 8.2...\n" << std::endl;
             lesson8_2_main();
+            continue;
+        }
+        if (input == "11-2") {
+            std::cout << "\n>>> 运行 Lesson 11.2...\n" << std::endl;
+            lesson11_2_main();
             continue;
         }
         
