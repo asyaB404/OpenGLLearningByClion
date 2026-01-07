@@ -28,6 +28,9 @@ extern int lesson10_1_main();
 extern int lesson11_1_main();
 extern int lesson11_2_main();
 extern int lesson11_3_main();
+extern int lesson12_1_main();
+extern int lesson12_2_main();
+extern int lesson12_3_main();
 
 // ============================================================================
 // 显示菜单
@@ -52,6 +55,9 @@ void showMenu() {
     std::cout << "11. Lesson 11 - 方向光（Directional Light）\n";
     std::cout << "11-2. Lesson 11.2 - 点光源（Point Light）\n";
     std::cout << "11-3. Lesson 11.3 - 聚光灯（Spotlight）\n";
+    std::cout << "12. Lesson 12 - 模型加载（Model Loading）\n";
+    std::cout << "12-2. Lesson 12.2 - 模型加载 + 点光源\n";
+    std::cout << "12-3. Lesson 12.3 - 模型加载 + 平行光\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
     std::cout << "输入 q 退出";
@@ -111,6 +117,16 @@ int main() {
         if (input == "11-3") {
             std::cout << "\n>>> 运行 Lesson 11.3...\n" << std::endl;
             lesson11_3_main();
+            continue;
+        }
+        if (input == "12-2") {
+            std::cout << "\n>>> 运行 Lesson 12.2...\n" << std::endl;
+            lesson12_2_main();
+            continue;
+        }
+        if (input == "12-3") {
+            std::cout << "\n>>> 运行 Lesson 12.3...\n" << std::endl;
+            lesson12_3_main();
             continue;
         }
         
@@ -176,6 +192,11 @@ int main() {
             case 11:
                 std::cout << "\n>>> 运行 Lesson 11.1...\n" << std::endl;
                 lesson11_1_main();
+                break;
+                
+            case 12:
+                std::cout << "\n>>> 运行 Lesson 12.1...\n" << std::endl;
+                lesson12_1_main();
                 break;
                 
             case 0:
