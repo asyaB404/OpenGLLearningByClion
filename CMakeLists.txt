@@ -12,6 +12,21 @@ add_subdirectory(engine/3rdparty/glad)
 # 添加 GLM 子目录（OpenGL 数学库）
 add_subdirectory(engine/3rdparty/glm)
 
+# 配置 Assimp 选项（在添加子目录之前设置）
+# 注意：这些选项必须在 add_subdirectory 之前设置
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "Build Assimp tools" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Build Assimp tests" FORCE)
+set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "Build Assimp samples" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "Install Assimp" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)  # 构建静态库
+set(ASSIMP_NO_EXPORT OFF CACHE BOOL "Disable Assimp export" FORCE)
+set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE BOOL "Treat warnings as errors" FORCE)  # 避免编译警告导致失败
+
+# 添加 Assimp 子目录（3D 模型加载库）
+# 注意：需要先克隆 assimp 仓库到 engine/3rdparty/assimp
+# 命令：cd engine/3rdparty && git clone https://github.com/assimp/assimp.git
+add_subdirectory(engine/3rdparty/assimp)
+
 # 查找 OpenGL（跨平台：Windows/macOS/Linux 都支持）
 find_package(OpenGL REQUIRED)
 
@@ -56,6 +71,7 @@ target_link_libraries(OpenGLLearning
         glfw          # GLFW 会自动处理平台特定的依赖
         OpenGL::GL    # CMake 的 OpenGL 包在 Windows/macOS/Linux 都可用
         glm::glm      # GLM 数学库（header-only，会自动传递头文件路径）
+        assimp        # Assimp 库（3D 模型加载，会自动传递头文件路径）
 )
 
 # macOS 特定框架（仅 macOS 需要）
