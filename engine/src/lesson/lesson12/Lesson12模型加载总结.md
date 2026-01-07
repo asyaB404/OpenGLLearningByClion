@@ -5,6 +5,7 @@
 - [Lesson 12.1: 基础模型加载](#lesson-121-基础模型加载)
 - [Lesson 12.2: 模型加载 + 点光源](#lesson-122-模型加载--点光源)
 - [Lesson 12.3: 模型加载 + 平行光](#lesson-123-模型加载--平行光)
+- [为什么需要副切线（Bitangent）？](#为什么需要副切线bitangent)
 - [核心类详解](#核心类详解)
 - [技术细节](#技术细节)
 - [🌟 重点：有/无点光源的区别](#-重点有无点光源的区别)
@@ -322,6 +323,195 @@ m_shader->setFloat("material.shininess", 32.0f);
 - **固定方向**：所有片段使用相同的光照方向
 - **无距离衰减**：距离不影响光照强度
 - **适合场景**：太阳光等全局光源
+
+---
+
+## 为什么需要副切线（Bitangent）？
+
+这是一个非常重要的问题！副切线（Bitangent）主要用于**法线贴图（Normal Mapping）**和**切线空间（Tangent Space）**计算。
+
+### 切线空间（Tangent Space）的概念
+
+在 3D 图形学中，每个顶点都有三个相互垂直的向量，构成一个局部坐标系：
+
+```
+切线空间 = {切线(Tangent), 副切线(Bitangent), 法线(Normal)}
+```
+
+这三个向量形成一个**右手坐标系**（Right-Handed Coordinate System）：
+
+```
+副切线 = 法线 × 切线  （叉乘）
+```
+
+### 为什么需要三个向量？
+
+#### 1. **法线（Normal）**
+- 方向：垂直于表面
+- 用途：计算光照（漫反射、镜面反射）
+- 问题：法线是全局的，不能直接用于纹理空间
+
+#### 2. **切线（Tangent）**
+- 方向：沿着纹理的 U 轴（水平方向）
+- 用途：定义纹理空间的 X 轴
+- 来源：从纹理坐标和顶点位置计算得出
+
+#### 3. **副切线（Bitangent）**
+- 方向：沿着纹理的 V 轴（垂直方向）
+- 用途：定义纹理空间的 Y 轴
+- 来源：从法线和切线计算得出（`Bitangent = Normal × Tangent`）
+
+### 法线贴图（Normal Mapping）中的应用
+
+**法线贴图**是一种技术，可以在不增加几何复杂度的前提下，增加表面的细节。法线贴图中的法线信息存储在**切线空间**中。
+
+#### 为什么法线贴图使用切线空间？
+
+1. **纹理坐标对齐**：
+   - 法线贴图的法线方向是相对于纹理坐标的
+   - 切线空间与纹理坐标对齐，便于采样和计算
+
+2. **旋转不变性**：
+   - 如果模型旋转，切线空间也会旋转
+   - 法线贴图的效果保持一致
+
+3. **可重用性**：
+   - 同一个法线贴图可以用于不同的模型
+   - 只要纹理坐标对齐即可
+
+#### 使用副切线进行坐标变换
+
+在法线贴图的着色器中，需要：
+
+1. **从切线空间转换到世界空间**：
+   ```glsl
+   // 构建 TBN 矩阵（Tangent-Bitangent-Normal）
+   mat3 TBN = mat3(Tangent, Bitangent, Normal);
+   
+   // 将法线贴图中的法线从切线空间转换到世界空间
+   vec3 normalFromMap = texture(normalMap, TexCoord).rgb * 2.0 - 1.0;  // 从 [0,1] 转换到 [-1,1]
+   vec3 worldNormal = normalize(TBN * normalFromMap);
+   ```
+
+2. **或者从世界空间转换到切线空间**：
+   ```glsl
+   // 构建 TBN 矩阵的逆矩阵（转置）
+   mat3 TBN_inv = transpose(mat3(Tangent, Bitangent, Normal));
+   
+   // 将世界空间的光源方向转换到切线空间
+   vec3 lightDir_tangent = normalize(TBN_inv * lightDir_world);
+   ```
+
+### 副切线的计算
+
+#### 在 Assimp 中
+
+Assimp 使用 `aiProcess_CalcTangentSpace` 标志自动计算切线和副切线：
+
+```cpp
+const aiScene* scene = importer.ReadFile(path, 
+    aiProcess_Triangulate |
+    aiProcess_GenSmoothNormals |
+    aiProcess_FlipUVs |
+    aiProcess_CalcTangentSpace  // 计算切线空间
+);
+```
+
+#### 计算方法
+
+对于每个三角形：
+
+1. **计算切线**：
+   ```
+   使用三角形的顶点位置和纹理坐标
+   切线 = (顶点位置差) / (纹理坐标差)
+   ```
+
+2. **计算副切线**：
+   ```
+   副切线 = 法线 × 切线
+   ```
+
+3. **正交化**：
+   ```
+   确保三个向量相互垂直
+   副切线 = 副切线 - (副切线 · 法线) × 法线
+   副切线 = normalize(副切线)
+   ```
+
+### 当前代码中的使用
+
+虽然当前的 Lesson 12 代码**没有使用法线贴图**，但 Mesh 类仍然存储了切线和副切线，原因：
+
+1. **为未来扩展做准备**：
+   - 如果以后要实现法线贴图，数据已经准备好了
+   - 不需要重新加载模型
+
+2. **Assimp 自动计算**：
+   - 使用 `aiProcess_CalcTangentSpace` 标志时，Assimp 会自动计算
+   - 不存储这些数据也不会节省太多空间
+
+3. **标准实践**：
+   - 大多数 3D 模型加载库都会存储这些数据
+   - 保持与行业标准一致
+
+### 如果不需要法线贴图，可以省略吗？
+
+**可以！** 如果确定不需要法线贴图，可以：
+
+1. **移除副切线**：
+   ```cpp
+   struct Vertex {
+       glm::vec3 Position;
+       glm::vec3 Normal;
+       glm::vec2 TexCoords;
+       // glm::vec3 Tangent;      // 可以省略
+       // glm::vec3 Bitangent;    // 可以省略
+   };
+   ```
+
+2. **移除 Assimp 标志**：
+   ```cpp
+   // 不使用 aiProcess_CalcTangentSpace
+   const aiScene* scene = importer.ReadFile(path, 
+       aiProcess_Triangulate |
+       aiProcess_GenSmoothNormals |
+       aiProcess_FlipUVs
+       // aiProcess_CalcTangentSpace  // 移除
+   );
+   ```
+
+3. **节省内存**：
+   - 每个顶点节省 24 字节（2 个 vec3）
+   - 对于大型模型，可以节省不少内存
+
+### 总结
+
+| 问题 | 答案 |
+|------|------|
+| **为什么需要副切线？** | 用于法线贴图和切线空间计算 |
+| **副切线的作用？** | 定义纹理空间的 Y 轴，与切线和法线构成切线空间坐标系 |
+| **当前代码使用了吗？** | 没有，但存储了数据以备将来使用 |
+| **可以省略吗？** | 可以，如果确定不需要法线贴图 |
+| **如何计算？** | 使用 `副切线 = 法线 × 切线`，然后正交化 |
+
+### 关键理解点
+
+1. **切线空间是局部坐标系**：
+   - 每个顶点都有自己的切线空间
+   - 由切线、副切线、法线三个向量构成
+
+2. **法线贴图需要切线空间**：
+   - 法线贴图中的法线存储在切线空间中
+   - 需要 TBN 矩阵进行坐标转换
+
+3. **副切线可以从法线和切线计算**：
+   - `Bitangent = Normal × Tangent`
+   - 但存储副切线可以避免重复计算
+
+4. **即使不使用，存储也无妨**：
+   - 为未来扩展做准备
+   - 符合行业标准实践
 
 ---
 
