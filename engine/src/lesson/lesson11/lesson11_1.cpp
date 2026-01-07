@@ -80,7 +80,31 @@ class Lesson11Application : public CameraApplication
 public:
     Lesson11Application() 
         : CameraApplication(800, 600, "OpenGL Learning - Lesson 11: Directional Light")
+        , m_lightIntensity(1.0f)  // 默认光源强度为 1.0
+        , m_lightColor(1.0f, 1.0f, 1.0f)  // 默认光源颜色为白色
     {
+    }
+    
+    // ========================================================================
+    // 设置光源强度（便捷方法）
+    // ========================================================================
+    // 参数：
+    //   - intensity: 光源强度系数（0.0 = 无光，1.0 = 正常，> 1.0 = 更亮）
+    // ========================================================================
+    void SetLightIntensity(float intensity)
+    {
+        m_lightIntensity = intensity;
+    }
+    
+    // ========================================================================
+    // 设置光源颜色（便捷方法）
+    // ========================================================================
+    // 参数：
+    //   - color: 光源颜色（RGB，范围 0.0-1.0）
+    // ========================================================================
+    void SetLightColor(const glm::vec3& color)
+    {
+        m_lightColor = color;
     }
 
 protected:
@@ -142,9 +166,17 @@ protected:
         m_lightingShader->setVec3("viewPos", m_camera.Position);
 
         // 光源属性
-        m_lightingShader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-        m_lightingShader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-        m_lightingShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        // 使用光源强度系数和颜色来计算各分量
+        // 环境光通常是光源强度的 0.2 倍
+        glm::vec3 ambient = m_lightColor * m_lightIntensity * 0.2f;
+        // 漫反射是光源强度的主要部分（0.5 倍）
+        glm::vec3 diffuse = m_lightColor * m_lightIntensity * 0.5f;
+        // 镜面反射通常是光源强度的 1.0 倍（高光）
+        glm::vec3 specular = m_lightColor * m_lightIntensity * 1.0f;
+        
+        m_lightingShader->setVec3("light.ambient", ambient);
+        m_lightingShader->setVec3("light.diffuse", diffuse);
+        m_lightingShader->setVec3("light.specular", specular);
 
         // 材质属性（使用纹理贴图，只需要设置 shininess）
         m_lightingShader->setFloat("material.shininess", 32.0f);
@@ -325,6 +357,10 @@ private:
     unsigned int m_diffuseMap;      // 漫反射贴图
     unsigned int m_specularMap;     // 镜面反射贴图
     
+    // 光源属性
+    float m_lightIntensity;         // 光源强度系数（默认 1.0）
+    glm::vec3 m_lightColor;         // 光源颜色（默认白色）
+    
     // 多个立方体的位置
     glm::vec3 m_cubePositions[10] = {
         glm::vec3( 0.0f,  0.0f,  0.0f),
@@ -346,6 +382,7 @@ private:
 int lesson11_1_main()
 {
     Lesson11Application app;
+    app.SetLightIntensity(2); // 光照强度
     
     if (!app.Initialize())
     {
