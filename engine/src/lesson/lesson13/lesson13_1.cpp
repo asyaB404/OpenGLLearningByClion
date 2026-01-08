@@ -16,17 +16,17 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <string>
-#include "common/application.h"  // Application 基类
-#include "common/shader.h"       // Shader 类
+#include "common/camera_application.h"  // CameraApplication 基类（支持相机移动）
+#include "common/shader.h"             // Shader 类
 
 // ============================================================================
-// Lesson13_1Application 类 - 继承自 Application
+// Lesson13_1Application 类 - 继承自 CameraApplication
 // ============================================================================
-class Lesson13_1Application : public Application
+class Lesson13_1Application : public CameraApplication
 {
 public:
     Lesson13_1Application() 
-        : Application(800, 600, "OpenGL Learning - Lesson 13.1: Depth Testing")
+        : CameraApplication(800, 600, "OpenGL Learning - Lesson 13.1: Depth Testing")
         , m_enableDepthTest(true)  // 默认启用深度测试
     {
     }
@@ -37,6 +37,9 @@ protected:
     // ========================================================================
     virtual void OnInitialize() override
     {
+        // 调用基类初始化（启用鼠标捕获）
+        CameraApplication::OnInitialize();
+        
         // 注意：基类 Application::Initialize() 已经启用了深度测试
         // 但我们可以在这里控制是否启用
         
@@ -52,6 +55,7 @@ protected:
         std::cout << "Lesson 13.1: 深度测试演示\n";
         std::cout << "========================================\n";
         std::cout << "按 SPACE 键切换深度测试的启用/禁用\n";
+        std::cout << "使用 WASD 移动相机观察效果\n";
         std::cout << "观察两个立方体的渲染顺序变化\n";
         std::cout << "========================================\n";
     }
@@ -61,6 +65,9 @@ protected:
     // ========================================================================
     virtual void OnUpdate(float deltaTime) override
     {
+        // 调用基类的 OnUpdate（处理相机移动）
+        CameraApplication::OnUpdate(deltaTime);
+        
         // 处理键盘输入
         GLFWwindow* window = GetWindow();
         if (window)
@@ -101,18 +108,14 @@ protected:
         // 激活着色器
         m_shader->use();
 
-        // 设置投影和视图矩阵
+        // 设置投影和视图矩阵（使用相机系统）
         glm::mat4 projection = glm::perspective(
-            glm::radians(45.0f), 
+            glm::radians(m_camera.Zoom), 
             (float)m_width / (float)m_height, 
             0.1f, 
             100.0f
         );
-        glm::mat4 view = glm::lookAt(
-            glm::vec3(0.0f, 0.0f, 5.0f),  // 相机位置
-            glm::vec3(0.0f, 0.0f, 0.0f),  // 看向原点
-            glm::vec3(0.0f, 1.0f, 0.0f)   // 上方向
-        );
+        glm::mat4 view = m_camera.GetViewMatrix();
         m_shader->setMat4("projection", projection);
         m_shader->setMat4("view", view);
 
