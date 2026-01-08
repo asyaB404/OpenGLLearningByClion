@@ -55,6 +55,7 @@ add_executable(OpenGLLearning
         engine/src/lesson/lesson12/lesson12_3.cpp # Lesson 12.3: 模型加载 + 平行光
         engine/src/lesson/lesson13/lesson13_1.cpp # Lesson 13.1: 深度测试（Depth Testing）
         engine/src/lesson/lesson13/lesson13_2.cpp # Lesson 13.2: 深度缓冲可视化（Depth Buffer Visualization）
+        engine/src/lesson/lesson14/lesson14_1.cpp # Lesson 14: 模板缓冲轮廓效果（Stencil Buffer Outline）
         engine/src/common/application.cpp       # Application 基类实现
         engine/src/common/camera_application.cpp # CameraApplication 实现
         engine/src/lesson/test/test.cpp

@@ -33,6 +33,7 @@ extern int lesson12_2_main();
 extern int lesson12_3_main();
 extern int lesson13_1_main();
 extern int lesson13_2_main();
+extern int lesson14_1_main();
 
 // ============================================================================
 // 显示菜单
@@ -62,6 +63,7 @@ void showMenu() {
     std::cout << "12-3. Lesson 12.3 - 模型加载 + 平行光\n";
     std::cout << "13-1. Lesson 13.1 - 深度测试（Depth Testing）\n";
     std::cout << "13-2. Lesson 13.2 - 深度缓冲可视化（Depth Buffer Visualization）\n";
+    std::cout << "14. Lesson 14 - 模板缓冲轮廓效果（Stencil Buffer Outline）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
     std::cout << "输入 q 退出";
@@ -211,6 +213,11 @@ int main() {
             case 12:
                 std::cout << "\n>>> 运行 Lesson 12.1...\n" << std::endl;
                 lesson12_1_main();
+                break;
+                
+            case 14:
+                std::cout << "\n>>> 运行 Lesson 14.1...\n" << std::endl;
+                lesson14_1_main();
                 break;
                 
             case 0:
