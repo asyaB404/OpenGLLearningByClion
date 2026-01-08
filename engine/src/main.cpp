@@ -31,6 +31,8 @@ extern int lesson11_3_main();
 extern int lesson12_1_main();
 extern int lesson12_2_main();
 extern int lesson12_3_main();
+extern int lesson13_1_main();
+extern int lesson13_2_main();
 
 // ============================================================================
 // 显示菜单
@@ -58,6 +60,8 @@ void showMenu() {
     std::cout << "12. Lesson 12 - 模型加载（Model Loading）\n";
     std::cout << "12-2. Lesson 12.2 - 模型加载 + 点光源\n";
     std::cout << "12-3. Lesson 12.3 - 模型加载 + 平行光\n";
+    std::cout << "13-1. Lesson 13.1 - 深度测试（Depth Testing）\n";
+    std::cout << "13-2. Lesson 13.2 - 深度缓冲可视化（Depth Buffer Visualization）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
     std::cout << "输入 q 退出";
@@ -127,6 +131,16 @@ int main() {
         if (input == "12-3") {
             std::cout << "\n>>> 运行 Lesson 12.3...\n" << std::endl;
             lesson12_3_main();
+            continue;
+        }
+        if (input == "13-1") {
+            std::cout << "\n>>> 运行 Lesson 13.1...\n" << std::endl;
+            lesson13_1_main();
+            continue;
+        }
+        if (input == "13-2") {
+            std::cout << "\n>>> 运行 Lesson 13.2...\n" << std::endl;
+            lesson13_2_main();
             continue;
         }
         
