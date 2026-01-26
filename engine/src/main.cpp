@@ -35,6 +35,7 @@ extern int lesson13_1_main();
 extern int lesson13_2_main();
 extern int lesson14_1_main();
 extern int lesson15_1_main();
+extern int lesson16_1_main();
 
 // ============================================================================
 // 显示菜单
@@ -66,6 +67,7 @@ void showMenu() {
     std::cout << "13-2. Lesson 13.2 - 深度缓冲可视化（Depth Buffer Visualization）\n";
     std::cout << "14. Lesson 14 - 模板缓冲轮廓效果（Stencil Buffer Outline）\n";
     std::cout << "15. Lesson 15 - 混合透明纹理（Blending Transparent Textures）\n";
+    std::cout << "16. Lesson 16 - 帧缓冲和后期处理（Framebuffers & Post-processing）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
     std::cout << "输入 q 退出";
@@ -225,6 +227,11 @@ int main() {
             case 15:
                 std::cout << "\n>>> 运行 Lesson 15...\n" << std::endl;
                 lesson15_1_main();
+                break;
+                
+            case 16:
+                std::cout << "\n>>> 运行 Lesson 16...\n" << std::endl;
+                lesson16_1_main();
                 break;
                 
             case 0:
