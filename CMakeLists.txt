@@ -58,6 +58,7 @@ add_executable(OpenGLLearning
         engine/src/lesson/lesson14/lesson14_1.cpp # Lesson 14: 模板缓冲轮廓效果（Stencil Buffer Outline）
         engine/src/lesson/lesson15/lesson15_1.cpp # Lesson 15: 混合透明纹理（Blending Transparent Textures）
         engine/src/lesson/lesson16/lesson16_1.cpp # Lesson 16: 帧缓冲和后期处理（Framebuffers & Post-processing）
+        engine/src/lesson/lesson17/lesson17_1.cpp # Lesson 17: 立方体贴图和天空盒（Cubemaps & Skybox）
         engine/src/common/application.cpp       # Application 基类实现
         engine/src/common/camera_application.cpp # CameraApplication 实现
         engine/src/lesson/test/test.cpp

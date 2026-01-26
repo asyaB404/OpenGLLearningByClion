@@ -36,6 +36,7 @@ extern int lesson13_2_main();
 extern int lesson14_1_main();
 extern int lesson15_1_main();
 extern int lesson16_1_main();
+extern int lesson17_1_main();
 
 // ============================================================================
 // 显示菜单
@@ -68,6 +69,7 @@ void showMenu() {
     std::cout << "14. Lesson 14 - 模板缓冲轮廓效果（Stencil Buffer Outline）\n";
     std::cout << "15. Lesson 15 - 混合透明纹理（Blending Transparent Textures）\n";
     std::cout << "16. Lesson 16 - 帧缓冲和后期处理（Framebuffers & Post-processing）\n";
+    std::cout << "17. Lesson 17 - 立方体贴图和天空盒（Cubemaps & Skybox）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
     std::cout << "输入 q 退出";
@@ -232,6 +234,11 @@ int main() {
             case 16:
                 std::cout << "\n>>> 运行 Lesson 16...\n" << std::endl;
                 lesson16_1_main();
+                break;
+                
+            case 17:
+                std::cout << "\n>>> 运行 Lesson 17...\n" << std::endl;
+                lesson17_1_main();
                 break;
                 
             case 0:
