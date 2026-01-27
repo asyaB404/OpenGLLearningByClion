@@ -108,6 +108,72 @@ public:
     }
 
     // ========================================================================
+    // 构造函数（带几何着色器）：从文件路径加载并编译顶点、几何、片段着色器
+    // ========================================================================
+    // 参数：
+    //   - vertexPath:   顶点着色器文件路径
+    //   - fragmentPath: 片段着色器文件路径
+    //   - geometryPath: 几何着色器文件路径（可选，传 nullptr 则等价于双参数构造函数）
+    // ========================================================================
+    Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
+    {
+        std::string vertexCode, fragmentCode, geometryCode;
+        std::ifstream vShaderFile, fShaderFile, gShaderFile;
+        vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        gShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        try {
+            vShaderFile.open(vertexPath);
+            fShaderFile.open(fragmentPath);
+            std::stringstream vStream, fStream;
+            vStream << vShaderFile.rdbuf();
+            fStream << fShaderFile.rdbuf();
+            vShaderFile.close();
+            fShaderFile.close();
+            vertexCode = vStream.str();
+            fragmentCode = fStream.str();
+            if (geometryPath && geometryPath[0] != '\0') {
+                gShaderFile.open(geometryPath);
+                std::stringstream gStream;
+                gStream << gShaderFile.rdbuf();
+                gShaderFile.close();
+                geometryCode = gStream.str();
+            }
+        }
+        catch (std::ifstream::failure& e) {
+            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
+        }
+        const char* vCode = vertexCode.c_str();
+        const char* fCode = fragmentCode.c_str();
+        unsigned int vertex, fragment;
+        vertex = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertex, 1, &vCode, NULL);
+        glCompileShader(vertex);
+        checkCompileErrors(vertex, "VERTEX");
+        fragment = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragment, 1, &fCode, NULL);
+        glCompileShader(fragment);
+        checkCompileErrors(fragment, "FRAGMENT");
+        ID = glCreateProgram();
+        glAttachShader(ID, vertex);
+        glAttachShader(ID, fragment);
+        unsigned int geometry = 0;
+        if (!geometryCode.empty()) {
+            const char* gCode = geometryCode.c_str();
+            geometry = glCreateShader(GL_GEOMETRY_SHADER);
+            glShaderSource(geometry, 1, &gCode, NULL);
+            glCompileShader(geometry);
+            checkCompileErrors(geometry, "GEOMETRY");
+            glAttachShader(ID, geometry);
+        }
+        glLinkProgram(ID);
+        checkCompileErrors(ID, "PROGRAM");
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
+        if (geometry) glDeleteShader(geometry);
+    }
+
+    // ========================================================================
     // 激活着色器程序
     // ========================================================================
     // 在渲染前调用此函数来使用这个着色器程序
