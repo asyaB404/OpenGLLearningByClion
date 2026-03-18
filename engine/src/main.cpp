@@ -39,6 +39,7 @@ extern int lesson16_1_main();
 extern int lesson17_1_main();
 extern int lesson18_1_main();
 extern int lesson18_2_main();
+extern int lesson19_1_main();
 
 // ============================================================================
 // 显示菜单
@@ -74,6 +75,7 @@ void showMenu() {
     std::cout << "17. Lesson 17 - 立方体贴图和天空盒（Cubemaps & Skybox）\n";
     std::cout << "18. Lesson 18 - 几何着色器（Geometry Shader）\n";
     std::cout << "18-2. Lesson 18-2 - 法线可视化（Normal Visualization）\n";
+    std::cout << "19. Lesson 19 - 实例化渲染（Instancing）\n";
     std::cout << "0. 测试\n";
     std::cout << "========================================\n";
     std::cout << "输入 q 退出";
@@ -253,6 +255,11 @@ int main() {
             case 18:
                 std::cout << "\n>>> 运行 Lesson 18...\n" << std::endl;
                 lesson18_1_main();
+                break;
+                
+            case 19:
+                std::cout << "\n>>> 运行 Lesson 19...\n" << std::endl;
+                lesson19_1_main();
                 break;
                 
             case 0:

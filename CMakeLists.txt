@@ -61,6 +61,7 @@ add_executable(OpenGLLearning
         engine/src/lesson/lesson17/lesson17_1.cpp # Lesson 17: 立方体贴图和天空盒（Cubemaps & Skybox）
         engine/src/lesson/lesson18/lesson18_1.cpp # Lesson 18: 几何着色器（Geometry Shader）
         engine/src/lesson/lesson18/lesson18_2.cpp # Lesson 18-2: 法线可视化（Normal Visualization）
+        engine/src/lesson/lesson19/lesson19_1.cpp # Lesson 19: 实例化渲染（Instancing）
         engine/src/common/application.cpp       # Application 基类实现
         engine/src/common/camera_application.cpp # CameraApplication 实现
         engine/src/lesson/test/test.cpp
